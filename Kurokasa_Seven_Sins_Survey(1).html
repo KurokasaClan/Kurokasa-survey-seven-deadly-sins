@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KUROKASA | Seven Sins Survey</title>
+<style>
+:root{--bg:#0b0b0d;--panel:#151518;--panel2:#1d1d22;--line:#36363d;--text:#f1f1f3;--muted:#a8a8b1;--accent:#d7d7df;--button:#f0f0f3;--buttontext:#111114}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.5}main{width:min(850px,100%);margin:auto;padding:24px 16px 50px}.top{text-align:center;padding:18px 0 22px;border-bottom:1px solid var(--line);margin-bottom:22px}.crest{font-size:12px;letter-spacing:5px;color:var(--muted)}h1{font-size:clamp(27px,6vw,42px);letter-spacing:3px;margin:8px 0}h2{font-size:20px;margin:0 0 8px}.sub{color:var(--muted);font-size:14px}.notice{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px;margin:18px 0 22px;font-size:14px}.question{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}.qtitle{font-weight:700;margin-bottom:13px}.scale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.choice{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 3px;cursor:pointer;font-size:12px;color:var(--muted);text-align:center}.choice input{accent-color:#fff;margin:0}.choice:has(input:checked){background:#35353d;border-color:#d7d7df;color:white}.num{font-weight:bold;font-size:15px;color:var(--text)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.btn{border:1px solid var(--line);border-radius:9px;padding:12px 17px;font-weight:bold;cursor:pointer;font-size:14px}.primary{background:var(--button);color:var(--buttontext);border-color:var(--button)}.secondary{background:var(--panel);color:var(--text)}button:disabled{opacity:.45;cursor:not-allowed}.error{color:#ffb5b5;margin:10px 0;display:none}.results{display:none;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:22px}.resultrow{margin:15px 0}.resulthead{display:flex;justify-content:space-between;gap:12px;font-weight:bold}.bar{height:8px;background:#303037;border-radius:10px;overflow:hidden;margin-top:7px}.fill{height:100%;background:#e4e4ea;border-radius:10px}.resultnote{color:var(--muted);font-size:13px}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:28px;letter-spacing:2px}
+@media(max-width:430px){main{padding:16px 11px 35px}.question{padding:13px}.choice{font-size:10px;padding:8px 1px}.num{font-size:14px}}
+</style>
+</head>
+<body><main>
+<header class="top"><div class="crest">黒傘 · KUROKASA</div><h1>THE SEVEN SINS</h1><div class="sub">PERSONALITY SURVEY · 30 QUESTIONS</div></header>
+<div class="notice"><strong>Instructions</strong><br>Answer honestly based on how you usually act, not how you want people to see you. Choose one answer for every statement. There are no right or wrong answers. Your results show your strongest matching Sins, not your strength or rank in Kurokasa.<br><br><strong>Scale:</strong> 1 = Not me at all · 2 = Slightly me · 3 = Sometimes me · 4 = Mostly me · 5 = Very much me</div>
+<form id="survey"><div id="questions"></div><div id="error" class="error">Please answer all 30 questions before viewing your results.</div><div class="actions"><button class="btn primary" type="submit">View My Results</button><button class="btn secondary" type="reset" id="reset">Reset Answers</button></div></form>
+<section class="results" id="results" aria-live="polite"><h2>Your Kurokasa Results</h2><p class="sub">Your scores are normalized so each Sin can be compared fairly, even though the question counts differ.</p><div id="resultlist"></div><p class="resultnote">These results are a guide for self-reflection, not a fixed label. If you already have a Sin in mind, you can discuss it with the Pillars or the leader.</p><div class="actions"><button class="btn primary" id="copy" type="button">Copy Results</button><button class="btn secondary" id="retake" type="button">Retake Survey</button></div><p id="copymsg" class="resultnote"></p></section>
+<div class="footer">KUROKASA · 黒傘</div></main>
+<script>
+const items = [
+['I feel proud when people recognize my abilities.','Pride'],
+['I find it difficult to admit when I am wrong.','Pride'],
+['I want my work to stand out from everyone else’s.','Pride'],
+['I dislike feeling as if someone is better than me.','Pride'],
+['I prefer to handle things myself rather than ask for help.','Pride'],
+['I pay close attention to what I can gain from a situation.','Greed'],
+['I hate losing something I worked hard to get.','Greed'],
+['I often want more, even when I already have enough.','Greed'],
+['I protect my time, resources, and opportunities carefully.','Greed'],
+['I can become strongly attached to a person or idea I desire.','Lust'],
+['When I want something, it can be hard to think about anything else.','Lust'],
+['I am drawn to excitement and intense experiences.','Lust'],
+['My wants can sometimes outweigh what I know is sensible.','Lust'],
+['I compare my progress or success with other people’s.','Envy'],
+['It bothers me when someone gets something I wanted.','Envy'],
+['I notice quickly when others receive more attention than I do.','Envy'],
+['Seeing someone succeed can make me question my own worth.','Envy'],
+['I enjoy comfort and taking time to relax.','Gluttony'],
+['When I enjoy something, I tend to keep going longer than planned.','Gluttony'],
+['I sometimes use food, games, shopping, or entertainment to improve my mood.','Gluttony'],
+['I can overindulge in things that make me feel good.','Gluttony'],
+['I react strongly when I feel disrespected.','Wrath'],
+['When I am angry, I find it difficult to calm down quickly.','Wrath'],
+['I feel a strong need to confront people who cross a line.','Wrath'],
+['I remember when someone has seriously wronged me.','Wrath'],
+['I tend to put off tasks that feel tiring or stressful.','Sloth'],
+['I prefer the easiest option when the effort seems unnecessary.','Sloth'],
+['I sometimes avoid responsibilities until they become urgent.','Sloth'],
+['I have trouble getting started even when I know what needs to be done.','Sloth'],
+['I would rather save my energy than do something I do not consider important.','Sloth']
+];
+const sins=['Pride','Greed','Lust','Envy','Gluttony','Wrath','Sloth'];
+const qroot=document.getElementById('questions');
+items.forEach((item,i)=>{const n=i+1;const box=document.createElement('section');box.className='question';box.innerHTML=`<div class="qtitle">${n}. ${item[0]}</div><div class="scale" role="radiogroup" aria-label="Question ${n}">${[1,2,3,4,5].map((v)=>`<label class="choice"><input type="radio" name="q${n}" value="${v}"><span class="num">${v}</span><span>${['Not me','Slightly','Sometimes','Mostly','Very much'][v-1]}</span></label>`).join('')}</div>`;qroot.appendChild(box)});
+const form=document.getElementById('survey');const results=document.getElementById('results');const error=document.getElementById('error');let summary='';
+form.addEventListener('submit',e=>{e.preventDefault();const data=new FormData(form);if(items.some((_,i)=>!data.get('q'+(i+1)))){error.style.display='block';results.style.display='none';const first=items.findIndex((_,i)=>!data.get('q'+(i+1)));document.querySelectorAll('.question')[first].scrollIntoView({behavior:'smooth',block:'center'});return}error.style.display='none';const raw=Object.fromEntries(sins.map(s=>[s,{sum:0,count:0}]));items.forEach((item,i)=>{raw[item[1]].sum+=Number(data.get('q'+(i+1)));raw[item[1]].count++});const ranked=sins.map(s=>({sin:s,score:Math.round(((raw[s].sum-raw[s].count)/(raw[s].count*4))*100)})).sort((a,b)=>b.score-a.score||sins.indexOf(a.sin)-sins.indexOf(b.sin));summary='KUROKASA - SEVEN SINS RESULTS\n'+ranked.map((r,i)=>`${i+1}. ${r.sin}: ${r.score}%`).join('\n');document.getElementById('resultlist').innerHTML=ranked.map((r,i)=>`<div class="resultrow"><div class="resulthead"><span>${i+1}. ${r.sin}</span><span>${r.score}%</span></div><div class="bar"><div class="fill" style="width:${r.score}%"></div></div>${i===0?'<div class="resultnote">Strongest match</div>':i===1?'<div class="resultnote">Second match</div>':i===2?'<div class="resultnote">Third match</div>':''}</div>`).join('');results.style.display='block';results.scrollIntoView({behavior:'smooth',block:'start'});});
+document.getElementById('reset').addEventListener('click',()=>{error.style.display='none';results.style.display='none';document.getElementById('copymsg').textContent=''});document.getElementById('retake').addEventListener('click',()=>{form.reset();results.style.display='none';error.style.display='none';window.scrollTo({top:0,behavior:'smooth'})});document.getElementById('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(summary);document.getElementById('copymsg').textContent='Results copied!'}catch(e){const t=document.createElement('textarea');t.value=summary;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();document.getElementById('copymsg').textContent='Results copied!'}});
+</script></body></html>
